@@ -15,8 +15,8 @@ PRISM is a multi-agent system designed to run first-pass analysis and flagging o
 
 PRISM follows a linear pipeline: a document moves forward through each stage in order and does not return to an earlier stage — with one deliberate exception. The APC Analysis Agent and AWP Analysis Agent run in parallel on every document. If their findings diverge, the Guardrail Agent analyzes the conflict and returns the case once with specific instructions for resolving it. If divergence persists after that single re-analysis, the case routes directly to Human Review rather than looping again.
 Each agent is itself agentic — it observes, reasons, evaluates, and acts — but the pipeline's shape stays linear and bounded, never open-ended.
-```mermaid
 
+*(Best viewed in a browser — if this opens in the GitHub app and shows raw text instead of a diagram, tap back and open the link in Chrome/Safari.)*
 flowchart TD
     A[Document] --> B["APC Analysis Agent + AWP Analysis Agent<br/>(run in parallel)"]
     B --> C["Guardrail Agent<br/>Arbitrates disagreements"]
