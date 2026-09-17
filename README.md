@@ -15,11 +15,23 @@ PRISM is a multi-agent system designed to run first-pass analysis and flagging o
 
 PRISM follows a linear pipeline: a document moves forward through each stage in order and does not return to an earlier stage — with one deliberate exception. The APC Analysis Agent and AWP Analysis Agent run in parallel on every document. If their findings diverge, the Guardrail Agent analyzes the conflict and returns the case once with specific instructions for resolving it. If divergence persists after that single re-analysis, the case routes directly to Human Review rather than looping again.
 Each agent is itself agentic — it observes, reasons, evaluates, and acts — but the pipeline's shape stays linear and bounded, never open-ended.
-Mermaid
+```mermaid
+
+flowchart TD
+    A[Document] --> B["APC Analysis Agent + AWP Analysis Agent<br/>(run in parallel)"]
+    B --> C["Guardrail Agent<br/>Arbitrates disagreements"]
+    C -->|"one resolution loop max"| B
+    C --> D["QC Agent / Second Review<br/>Checks Guardrail's output"]
+    D --> E["Human Review<br/>Final decision, always"]
+    C -.->|"unresolved divergence"| E
+    E --> F["Privilege Log Entry<br/>Drafts entry only"]
+    F --> G["Audit Trail"]
+```
 
 ⚖️ APC Analysis Agent
 
 Attorney-client privilege requires four elements: a communication, between attorney and client, made in confidence, for the purpose of seeking or giving legal advice. The APC Analysis Agent checks each incoming document against these four elements and returns a recommendation with its reasoning — it never makes the final call.
+
 Example:
 From: Sarah Mitchell, General Counsel
 To: Daniel Roberts, Chief Financial Officer
@@ -41,7 +53,7 @@ Why this matters: APC and AWP are different tests. A document can pass one and f
 
 The Guardrail Agent has two jobs:
 Checks the reasoning of APC and AWP — not just their conclusions, but whether each agent correctly applied its own test.
-arbitrates— when APC and AWP disagree, Guardrail analyzes the conflict, makes a decision, and returns the case to both agents once with specific instructions for resolving it. A single loop, capped to prevent endless back-and-forth. If the two agents still cannot converge after that one loop, Guardrail escalates directly to Human Review.
+arbitrates disagreements— when APC and AWP disagree, Guardrail analyzes the conflict, makes a decision, and returns the case to both agents once with specific instructions for resolving it. A single loop, capped to prevent endless back-and-forth. If the two agents still cannot converge after that one loop, Guardrail escalates directly to Human Review.
 Guardrail does not re-decide privilege itself — it checks whether the two analysis agents reasoned correctly and reconciles them when they don't. That distinction matters: Guardrail is a check on the checkers.
 
 🔎 QC Agent
@@ -67,9 +79,11 @@ The Sarah Mitchell email arrives. APC and AWP analyze it in parallel — APC fla
 🧪 Test & Evaluation
 
 PRISM hasn't been run against a production document set yet — this section tests its logic manually against known scenarios, the same method used to build it out.
+
 Test 1 — Sarah Mitchell email (see full email under APC Analysis Agent)
 APC = privileged (all four elements met). AWP = not work product (regulatory inquiry, litigation not yet anticipated).
 Result: privileged under APC only.
+
 Test 2 — James Okonkwo, v1 (safety bulletin)
 From: James Okonkwo, in-house counsel
 To: Priya Naidoo, Head of Operations
@@ -78,6 +92,7 @@ Subject: Warehouse safety incident — next steps
 Priya, following up on the forklift incident last week. Can you send me the maintenance logs and the shift supervisor's write-up? I want to review them before we finalize the safety bulletin going out to all warehouse staff next Monday.
 APC = fails (third party cc'd breaks confidence; purpose is business, not legal advice). AWP = fails (no litigation signal present, just a plausible future risk).
 Result: not privileged, not work product — document should be produced.
+
 Test 3 — James Okonkwo, v2 (litigation hold)
 From: James Okonkwo, in-house counsel
 To: Priya Naidoo, Head of Operations
