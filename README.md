@@ -25,15 +25,16 @@ Each agent is itself agentic — it observes, reasons, evaluates, and acts — b
 
 ```mermaid
 flowchart TD
-    A[Document] --> B["APC Analysis Agent + AWP Analysis Agent<br/>(run in parallel)"]
-    B --> C["Guardrail Agent<br/>Arbitrates disagreements"]
-    C -->|"one resolution loop max"| B
-    C --> D["QC Agent / Second Review<br/>Checks Guardrail's output"]
-    D --> E["Human Review<br/>Final decision, always"]
-    C -.->|"unresolved divergence"| E
-    E --> F["Privilege Log Entry<br/>Drafts entry only"]
+    A[Document] --> B["APC Agent + AWP Agent (parallel)"]
+    B --> C["Guardrail Agent - Arbitrates disagreements"]
+    C -->|one resolution loop max| B
+    C --> D["QC Agent - Checks Guardrail output"]
+    D --> E["Human Review - Final decision"]
+    C -.->|unresolved divergence| E
+    E --> F["Privilege Log Entry - Drafts entry only"]
     F --> G["Audit Trail"]
 ```
+
 ⚖️ APC Analysis Agent
 
 Attorney-client privilege requires four elements: a communication, between attorney and client, made in confidence, for the purpose of seeking or giving legal advice. The APC Analysis Agent checks each incoming document against these four elements and returns a recommendation with its reasoning — it never makes the final call.
