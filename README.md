@@ -10,6 +10,14 @@ by Lucentio Harris
 Privilege review is one of the hardest calls to get right in document review. Reviewers either under-flag or over-flag, and either error can be costly — under-flagging risks waiver, which is often irreversible once documents are produced; over-flagging slows the case and drives up cost.
 PRISM is a multi-agent system designed to run first-pass analysis and flagging on privilege calls. But handling volume isn't the same as handling the decision — the most important part of privilege coding is the human in the loop.
 
+🛠️ Tech Stack
+
+- Python 3.11+
+- LangChain / MCP (Model Context Protocol) — agent orchestration & inter-agent messaging
+- JSON Schemas — structured, auditable output for every agent recommendation
+- Claude API (Anthropic) — reasoning engine for each agent
+- Mermaid — pipeline/architecture diagrams
+
 🏗️ Agent Architecture
 
 PRISM follows a linear pipeline: a document moves forward through each stage in order and does not return to an earlier stage — with one deliberate exception. The APC Analysis Agent and AWP Analysis Agent run in parallel on every document. If their findings diverge, the Guardrail Agent analyzes the conflict and returns the case once with specific instructions for resolving it. If divergence persists after that single re-analysis, the case routes directly to Human Review rather than looping again.
