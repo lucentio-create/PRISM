@@ -50,10 +50,31 @@ Output: Privileged (APC) — confidence 94% — basis: all four elements explici
 
 📁 AWP Analysis Agent
 
-Attorney work product protects material prepared in anticipation of litigation — not just material that later becomes useful in a dispute, but material created because litigation was reasonably foreseeable at the time. Unlike APC, it doesn't require a communication between attorney and client, but it does require an actual anticipated legal fight.
+Attorney Work Product (AWP) protects materials prepared because litigation was reasonably foreseeable at the time—not just stuff that turns out to be useful later in a dispute. Unlike Attorney-Client Privilege, AWP doesn't require direct communication between a lawyer and client, but it does require an actual legal dispute on the horizon.
+
+Work product falls into two distinct tiers under U.S. law:
+- Ordinary Work Product: Factual notes, witness statements, and objective data. This gets weaker protection and can sometimes be compelled by the opposing side.
+- Opinion Work Product: A lawyer's mental impressions, legal theories, conclusions, and strategy. This gets much stronger protection and is almost never discoverable.
+
+The AWP Agent categorizes documents into one of three outcomes: Not Work Product, Ordinary Work Product, or Opinion Work Product.
+
+Note: While PRISM currently focuses on APC and AWP, other legal protections exist—such as banker-client privilege, spousal/marital privilege, and joint defense privilege. Expanding to cover these additional categories is planned for future updates.
+
+Example: Mitchell’s email asks to "assess our legal position" on a routine regulatory inquiry—with no opposing party, no filed action, and no strategy being built.
+Output: Not Work Product — Confidence: 88% — Basis: Regulatory inquiry present, but no clear signals of anticipated litigation.
+
+Why this matters: AWP isn't a one-size-fits-all label. Determining that a document is work product is only step one; you still have to split ordinary facts from attorney mental impressions because the level of protection is completely different. A regulatory inquiry might lead to litigation down the road, but "maybe later" isn't "anticipated now"—and this agent is tuned to hold that line rather than over-flagging everything.
+
+
+The AWP Analysis Agent now classifies a document into one of three outcomes: not work product, ordinary work product, or opinion work product — each carrying a different protection strength in its output.
+
+Note: privilege extends beyond APC and AWP. Other protected categories — such as banker-client privilege, spousal/marital privilege, and joint defense privilege — exist and may apply depending on jurisdiction and matter type. PRISM's current scope covers APC and AWP; expanding to these additional categories is a noted area for future development.
+
 Same example as above: Mitchell's email seeks to "assess our legal position" on a regulatory inquiry — no opposing party, no filed action, no case theory being built.
 Output: Not work product — confidence 88% — basis: regulatory inquiry present, but no litigation-anticipation signal (no claim, no opposing party, no case theory)
-Why this matters: APC and AWP are different tests. A document can pass one and fail the other. A regulatory inquiry may eventually become litigation — but "may eventually" isn't "anticipated now," and this agent is built to hold that line rather than over-flag.
+
+Why this matters: APC and AWP are different tests, and AWP itself isn't a single tier — a document found to be work product still needs a second determination (ordinary vs. opinion) since the protection strength differs. A regulatory inquiry may eventually become litigation — but "may eventually" isn't "anticipated now," and this agent is built to hold that line rather than over-flag.
+
 
 🛡️ Guardrail Agent
 
